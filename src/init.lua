@@ -35,7 +35,7 @@ local converters: {[string]: any} = {
 			}
 		end,
 		Deserialize = function(data: Data): CFrame
-			return CFrame.fromMatrix(data.Position, deserialConvert(data.XVector), deserialConvert(data.YVector), deserialConvert(data.ZVector))
+			return CFrame.fromMatrix(data.Position or Vector3.new(0,0,0), deserialConvert(data.XVector), deserialConvert(data.YVector), deserialConvert(data.ZVector))
 		end,
 	} :: ConverterTable<CFrame>,
 	["Color3"] = {
@@ -132,7 +132,7 @@ local converters: {[string]: any} = {
 	["NumberSequence"] = {
 		Serialize = function(value: NumberSequence): Data
 			local keypointData = {}
-			for i, keypoint: ColorSequenceKeypoint in ipairs(value.Keypoints) do
+			for i, keypoint: NumberSequenceKeypoint in ipairs(value.Keypoints) do
 				keypointData[i] = serialConvert(keypoint)
 			end
 			return {

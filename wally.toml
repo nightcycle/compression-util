@@ -1,7 +1,7 @@
 [package]
 name = "nightcycle/serializer"
 description = "Serialized mixed tables of roblox data types and instances into a JSON encodable table."
-version = "0.1.8"
+version = "0.1.9"
 authors = ["CJ Oyer <coyer@nightcycle.us>"]
 realm = "shared"
 registry = "https://github.com/upliftgames/wally-index"
