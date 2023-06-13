@@ -28,14 +28,14 @@ local converters: {[string]: any} = {
 	["CFrame"] = {
 		Serialize = function(value: CFrame): Data
 			return {
-				Position = value.Position,
+				Position = serialConvert(value.Position),
 				XVector = serialConvert(value.XVector),
 				YVector = serialConvert(value.YVector),
 				ZVector = serialConvert(value.ZVector),
 			}
 		end,
 		Deserialize = function(data: Data): CFrame
-			return CFrame.fromMatrix(data.Position or Vector3.new(0,0,0), deserialConvert(data.XVector), deserialConvert(data.YVector), deserialConvert(data.ZVector))
+			return CFrame.fromMatrix(if data.Position then deserialConvert(data.Position) else Vector3.new(0,0,0), deserialConvert(data.XVector), deserialConvert(data.YVector), deserialConvert(data.ZVector))
 		end,
 	} :: ConverterTable<CFrame>,
 	["Color3"] = {
