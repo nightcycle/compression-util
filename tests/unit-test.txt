@@ -1,0 +1,14 @@
+user_run_in_roblox-50312.rbxmx.run-in-roblox-plugin.Main:75: test-run result:
+[skipped]:[packages/_Index/boatbomber_hashlib@1/0/hashlib/HashLib]
+[failure]:[packages/package/UnitTest/serialize-util/encode array/integer]:["invalid argument #2 to 'unpack' (data string too short)"]
+[failure]:[packages/package/UnitTest/serialize-util/encode array/float]:["invalid argument #2 to 'unpack' (data string too short)"]
+[failure]:[packages/package/UnitTest/serialize-util/encode array/inf]:["invalid argument #2 to 'unpack' (data string too short)"]
+[failure]:[packages/package/UnitTest/serialize-util/encode array/NaN]:["invalid argument #2 to 'unpack' (data string too short)"]
+[success]:[packages/package/UnitTest/serialize-util/encode array/empty]
+user_run_in_roblox-50312.rbxmx.run-in-roblox-plugin.Main:75 function test
+user_run_in_roblox-50312.rbxmx.run-in-roblox-plugin.Main:79
+user_run_in_roblox-50312.rbxmx.run-in-roblox-plugin:79
+
+Stack Begin
+Script 'user_run_in_roblox-50312.rbxmx.run-in-roblox-plugin', Line 84
+Stack End

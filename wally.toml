@@ -1,11 +1,13 @@
 [package]
-name = "nightcycle/serializer"
-description = "Serialized mixed tables of roblox data types and instances into a JSON encodable table."
-version = "0.1.10"
+name = "nightcycle/package"
+description = "A package!"
+version = "1.0.0"
 authors = ["CJ Oyer <coyer@nightcycle.us>"]
 realm = "shared"
 registry = "https://github.com/upliftgames/wally-index"
 exclude = ["Packages", ".vscode"]
 
 [dependencies]
-# Serialize = "sleitnick/ser@^1.0.5"
+HashUtil = "boatbomber/hashlib@1.0.0"
+TestEZ = "roblox/testez@0.4.1"
+TableUtil = "nightcycle/table-util@1.1.0"
