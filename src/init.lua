@@ -37,20 +37,20 @@ local KEYS = {
 	"NumberSequenceKeypoint",
 	"PathWaypoint",
 	"PhysicalProperties",
-	-- "Ray",
-	-- "Rect",
-	-- "Region3",
-	-- "Region3int16",
-	-- "TweenInfo",
-	-- "UDim",
-	-- "UDim2",
-	-- "Vector2",
-	-- "Vector2int16",
-	-- "Vector3",
-	-- "Vector3int16",
-	-- "number",
-	-- "string",
-	-- "boolean",
+	"Ray",
+	"Rect",
+	"Region3",
+	"Region3int16",
+	"TweenInfo",
+	"UDim",
+	"UDim2",
+	"Vector2",
+	"Vector2int16",
+	"Vector3",
+	"Vector3int16",
+	"number",
+	"string",
+	"boolean",
 }
 export type ValidTypes = (
 	BrickColor | 
@@ -65,21 +65,21 @@ export type ValidTypes = (
 	NumberSequence | 
 	NumberSequenceKeypoint | 
 	PathWaypoint | 
-	PhysicalProperties --| 
-	-- Ray | 
-	-- Rect | 
-	-- Region3 | 
-	-- Region3int16 | 
-	-- TweenInfo | 
-	-- UDim | 
-	-- UDim2 | 
-	-- Vector2 | 
-	-- Vector2int16 | 
-	-- Vector3 | 
-	-- Vector3int16 | 
-	-- number | 
-	-- string | 
-	-- boolean
+	PhysicalProperties | 
+	Ray | 
+	Rect | 
+	Region3 | 
+	Region3int16 | 
+	TweenInfo | 
+	UDim | 
+	UDim2 | 
+	Vector2 | 
+	Vector2int16 | 
+	Vector3 | 
+	Vector3int16 | 
+	number | 
+	string | 
+	boolean
 )
 
 -- Variables
@@ -318,6 +318,42 @@ function decodeVector3(encodedValue: string): Vector3
 	local _index, x, y, z = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(3), encodedValue)
 	return Vector3.new(x,y,z)
 end
+function encodeVector3Int16(value: Vector3int16): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local x, y, z = value.X, value.Y, value.Z
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR:rep(3), index, x,y,z)
+end
+
+function decodeVector3Int16(encodedValue: string): Vector3int16
+	local _index, x, y, z = string.unpack(POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR:rep(3), encodedValue)
+	return Vector3int16.new(x,y,z)
+end
+
+function encodeVector2(value: Vector2): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local x, y = value.X, value.Y
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2), index, x,y)
+end
+
+function decodeVector2(encodedValue: string): Vector2
+	local _index, x, y = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2), encodedValue)
+	return Vector2.new(x,y)
+end
+
+function encodeVector2Int16(value: Vector2int16): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local x, y = value.X, value.Y
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR:rep(2), index, x,y)
+end
+
+function decodeVector2Int16(encodedValue: string): Vector2int16
+	local _index, x, y = string.unpack(POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR:rep(2), encodedValue)
+	return Vector2int16.new(x,y)
+end
+
 
 function encodePathWaypoint(value: PathWaypoint): string
 	local index = table.find(KEYS, typeof(value))
@@ -356,6 +392,203 @@ function decodePhysicalProperties(encodedValue: string): PhysicalProperties
 		elasticWeight
 	)
 end
+
+function encodeRay(value: Ray): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+
+	local encodedOrigin = encodeVector3(value.Origin)
+	local encodedDirection = encodeVector3(value.Direction)
+
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR:rep(2), index, encodedOrigin, encodedDirection)
+end
+
+function decodeRay(encodedValue: string): Ray
+
+	local _index, encodedOrigin, encodedDirection = string.unpack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR:rep(2), encodedValue)
+
+	local origin = decodeVector3(encodedOrigin)
+	local direction = decodeVector3(encodedDirection)
+
+	return Ray.new(
+		origin,
+		direction
+	)
+end
+
+function encodeRect(value: Rect): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+
+
+	local encodedMin = encodeVector2(value.Min)
+	local encodedMax = encodeVector2(value.Max)
+
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR:rep(2), index, encodedMin, encodedMax)
+end
+
+function decodeRect(encodedValue: string): Rect
+	local _index, encodedMin, encodedMax = string.unpack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR:rep(2), encodedValue)
+
+	local min = decodeVector2(encodedMin)
+	local max = decodeVector2(encodedMax)
+
+	return Rect.new(min, max)
+end
+
+function encodeRegion3(value: Region3): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+
+	local origin = value.CFrame * CFrame.new(-value.Size/2)
+	local dest = value.CFrame * CFrame.new(value.Size/2)
+	-- local lQ1 = value.CFrame * CFrame.new(value.Size.X/2, -value.Size.Y/2, value.Size.Z/2)
+	-- local uQ1 = value.CFrame * CFrame.new(value.Size.X/2, value.Size.Y/2, value.Size.Z/2)
+	-- local lQ2 = value.CFrame * CFrame.new(value.Size.X/2, -value.Size.Y/2, -value.Size.Z/2)
+	-- local uQ2 = value.CFrame * CFrame.new(value.Size.X/2, value.Size.Y/2, -value.Size.Z/2)
+	-- local lQ3 = value.CFrame * CFrame.new(-value.Size.X/2, -value.Size.Y/2, -value.Size.Z/2)
+	-- local uQ3 = value.CFrame * CFrame.new(-value.Size.X/2, value.Size.Y/2, -value.Size.Z/2)
+	-- local lQ4 = value.CFrame * CFrame.new(-value.Size.X/2, -value.Size.Y/2, value.Size.Z/2)
+	-- local uQ4 = value.CFrame * CFrame.new(-value.Size.X/2, value.Size.Y/2, value.Size.Z/2)
+
+	local maxX = dest.X-- math.min(lQ1.X, uQ1.X, lQ2.X,uQ2.X, lQ3.X, uQ3.X, lQ4.X, uQ4.X)
+	local minX = origin.X-- math.max(lQ1.X, uQ1.X, lQ2.X,uQ2.X, lQ3.X, uQ3.X, lQ4.X, uQ4.X)
+	local maxY = dest.Y--math.min(lQ1.Y, uQ1.Y, lQ2.Y,uQ2.Y, lQ3.Y, uQ3.Y, lQ4.Y, uQ4.Y)
+	local minY = origin.Y-- math.max(lQ1.Y, uQ1.Y, lQ2.Y,uQ2.Y, lQ3.Y, uQ3.Y, lQ4.Y, uQ4.Y)
+	local maxZ = dest.Z--math.min(lQ1.Z, uQ1.Z, lQ2.Z,uQ2.Z, lQ3.Z, uQ3.Z, lQ4.Z, uQ4.Z)
+	local minZ = origin.Z--math.max(lQ1.Z, uQ1.Z, lQ2.Z,uQ2.Z, lQ3.Z, uQ3.Z, lQ4.Z, uQ4.Z)
+
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(6), index, minX, minY, minZ, maxX, maxY, maxZ)
+end
+
+function decodeRegion3(encodedValue: string): Region3
+	local _index, minX, minY, minZ, maxX, maxY, maxZ = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(6), encodedValue)
+
+	local min = Vector3.new(minX, minY, minZ)
+	local max = Vector3.new(maxX, maxY, maxZ)
+
+	return Region3.new(min, max)
+end
+
+function encodeRegion3Int16(value: Region3int16): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+
+	local minX = value.Min.X
+	local maxX = value.Max.X
+	local minY = value.Min.Y
+	local maxY = value.Max.Y
+	local minZ = value.Min.Z
+	local maxZ = value.Max.Z
+
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(6), index, minX, minY, minZ, maxX, maxY, maxZ)
+end
+
+function decodeRegion3Int16(encodedValue: string): Region3int16
+	local _index, minX, minY, minZ, maxX, maxY, maxZ = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(6), encodedValue)
+
+	local min = Vector3int16.new(minX, minY, minZ)
+	local max = Vector3int16.new(maxX, maxY, maxZ)
+
+	return Region3int16.new(min, max)
+end
+
+function encodeTweenInfo(value: TweenInfo): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local reverses = value.Reverses
+	local repeatCount = value.RepeatCount
+	local t = value.Time
+	local delayTime = value.DelayTime
+	local encodedEasingDirection = encodeEnumItem(value.EasingDirection)
+	local encodedEasingStyle = encodeEnumItem(value.EasingStyle)
+
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2)..STRING_PACK_ENCODING_CHAR:rep(2), 
+		index, 
+		if reverses then 1 else 0,
+		repeatCount, 
+		t,
+		delayTime, 
+		encodedEasingDirection, 
+		encodedEasingStyle
+	)
+end
+
+function decodeTweenInfo(encodedValue: string): TweenInfo
+	local _index, reverseInt, repeatCount, t, delayTime, encodedEasingDirection, encodedEasingStyle = string.unpack(
+		POS_INT_PACK_ENCODING_CHAR..POS_INT_PACK_ENCODING_CHAR..INTEGER_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2)..STRING_PACK_ENCODING_CHAR:rep(2),
+		encodedValue
+	)
+
+	return TweenInfo.new(
+		t,
+		decodeEnumItem(encodedEasingStyle) :: Enum.EasingStyle,
+		decodeEnumItem(encodedEasingDirection) :: Enum.EasingDirection,
+		repeatCount, 
+		reverseInt == 1,
+		delayTime
+	)
+
+end
+
+function encodeUDim(value: UDim): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local scale, offset = value.Scale, value.Offset
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2), index, scale, offset)
+end
+
+function decodeUDim(encodedValue: string): UDim
+	local _index, scale, offset = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(2), encodedValue)
+	return UDim.new(scale, offset)
+end
+
+function encodeUDim2(value: UDim2): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	local xScale, xOffset, yScale, yOffset = value.X.Scale, value.X.Offset, value.Y.Scale, value.Y.Offset
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(4), index, xScale, xOffset, yScale, yOffset)
+end
+
+function decodeUDim2(encodedValue: string): UDim2
+	local _index, xScale, xOffset, yScale, yOffset = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR:rep(4), encodedValue)
+
+	return UDim2.new(xScale, xOffset, yScale, yOffset)
+end
+
+function encodeString(value: string): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR, index, value)
+end
+
+function decodeString(encodedValue: string): string
+	local _index, value = string.unpack(POS_INT_PACK_ENCODING_CHAR..STRING_PACK_ENCODING_CHAR, encodedValue)
+	return value
+end
+
+function encodeNumber(value: number): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	return string.pack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR, index, value)
+end
+
+function decodeNumber(encodedValue: string): number
+	local _index, value = string.unpack(POS_INT_PACK_ENCODING_CHAR..FLOAT_PACK_ENCODING_CHAR, encodedValue)
+	return value
+end
+
+function encodeBoolean(value: boolean): string
+	local index = table.find(KEYS, typeof(value))
+	assert(index)
+	return string.pack(POS_INT_PACK_ENCODING_CHAR:rep(2), index, if value then 0 else 1)
+end
+
+function decodeBoolean(encodedValue: string): boolean
+	local _index, value = string.unpack(POS_INT_PACK_ENCODING_CHAR:rep(2), encodedValue)
+	return value == 1
+end
+
 
 -- Class
 local Util = {}
@@ -444,10 +677,36 @@ function Util.decodeType(encodedValue: string): any
 		return decodeNumberSequence(encodedValue)
 	elseif key == "Vector3" then
 		return decodeVector3(encodedValue)
+	elseif key == "Vector3int16" then
+		return decodeVector3Int16(encodedValue)
+	elseif key == "Vector2" then
+		return decodeVector2(encodedValue)
+	elseif key == "Vector2int16" then
+		return decodeVector2Int16(encodedValue)
 	elseif key == "PathWaypoint" then
 		return decodePathWaypoint(encodedValue)
 	elseif key == "PhysicalProperties" then
 		return decodePhysicalProperties(encodedValue)
+	elseif key == "Ray" then
+		return decodeRay(encodedValue)
+	elseif key == "Rect" then
+		return decodeRect(encodedValue)
+	elseif key == "Region3" then
+		return decodeRegion3(encodedValue)		
+	elseif key == "Region3int16" then
+		return decodeRegion3Int16(encodedValue)	
+	elseif key == "TweenInfo" then
+		return decodeTweenInfo(encodedValue)	
+	elseif key == "UDim" then
+		return decodeUDim(encodedValue)	
+	elseif key == "UDim2" then
+		return decodeUDim2(encodedValue)	
+	elseif key == "string" then
+		return decodeString(encodedValue)
+	elseif key == "number" then
+		return decodeNumber(encodedValue)
+	elseif key == "boolean" then
+		return decodeBoolean(encodedValue)
 	end
 	error(`bad key: {key}`)
 end
@@ -479,10 +738,36 @@ function Util.encodeType(value: ValidTypes): string
 		return encodeNumberSequence(value :: NumberSequence)
 	elseif key == "Vector3" then
 		return encodeVector3(value :: Vector3)
+	elseif key == "Vector3int16" then
+		return encodeVector3Int16(value :: Vector3int16)
+	elseif key == "Vector2" then
+		return encodeVector2(value :: Vector2)
+	elseif key == "Vector2int16" then
+		return encodeVector2Int16(value :: Vector2int16)
 	elseif key == "PathWaypoint" then
 		return encodePathWaypoint(value :: PathWaypoint)
 	elseif key == "PhysicalProperties" then
 		return encodePhysicalProperties(value :: PhysicalProperties)
+	elseif key == "Ray" then
+		return encodeRay(value :: Ray)
+	elseif key == "Rect" then
+		return encodeRect(value :: Rect)
+	elseif key == "Region3" then
+		return encodeRegion3(value :: Region3)
+	elseif key == "Region3int16" then
+		return encodeRegion3Int16(value :: Region3int16)
+	elseif key == "TweenInfo" then
+		return encodeTweenInfo(value :: TweenInfo)
+	elseif key == "UDim" then
+		return encodeUDim(value :: UDim)
+	elseif key == "UDim2" then
+		return encodeUDim2(value :: UDim2)
+	elseif key == "string" then
+		return encodeString(value :: string)
+	elseif key == "number" then
+		return encodeNumber(value :: number)
+	elseif key == "boolean" then
+		return encodeBoolean(value :: boolean)
 	end
 	error(`bad key: {key}`)
 end

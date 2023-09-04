@@ -415,10 +415,44 @@ return function()
 					end
 				end
 			end)
+			it("Vector2", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v3 = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Vector2.new(v3.X, v3.Y)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.X).to.be.equal(out.X)
+					expect(v.Y).to.be.equal(out.Y)
+				end
+			end)
+			it("Vector2int16", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v3 = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Vector2int16.new(v3.X, v3.Y)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.X).to.be.equal(out.X)
+					expect(v.Y).to.be.equal(out.Y)
+				end
+			end)
 			it("Vector3", function()
 				local rng = Random.new(SEED)
 				for i=1, SAMPLE_SIZE do
 					local v = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.X).to.be.equal(out.X)
+					expect(v.Y).to.be.equal(out.Y)
+					expect(v.Z).to.be.equal(out.Z)
+				end
+			end)
+			it("Vector3int16", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v3 = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Vector3int16.new(v3.X, v3.Y, v3.Z)
 					local encoded = SerializeUtil.encodeType(v)
 					local out = SerializeUtil.decodeType(encoded)
 					expect(v.X).to.be.equal(out.X)
@@ -458,6 +492,161 @@ return function()
 					expect(v.FrictionWeight).to.be.equal(out.FrictionWeight)
 					expect(v.ElasticityWeight).to.be.equal(out.ElasticityWeight)
 					expect(v.Density).to.be.equal(out.Density)
+				end
+			end)
+			it("Ray", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local direction = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local origin = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Ray.new(origin, direction)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.Origin.X).to.be.equal(out.Origin.X)
+					expect(v.Origin.Y).to.be.equal(out.Origin.Y)
+					expect(v.Origin.Z).to.be.equal(out.Origin.Z)
+					expect(v.Direction.X).to.be.equal(out.Direction.X)
+					expect(v.Direction.Y).to.be.equal(out.Direction.Y)
+					expect(v.Direction.Z).to.be.equal(out.Direction.Z)
+				end
+			end)
+			it("Rect", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local min = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local max = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Rect.new(
+						Vector2.new(min.X, min.Y),
+						Vector2.new(max.X, max.Y)
+					)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.Min.X).to.be.equal(out.Min.X)
+					expect(v.Min.Y).to.be.equal(out.Min.Y)
+					expect(v.Max.X).to.be.equal(out.Max.X)
+					expect(v.Max.Y).to.be.equal(out.Max.Y)
+				end
+			end)
+			it("Region3", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local min = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local max = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Region3.new(
+						min,
+						max
+					)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					-- expect(v.Size.X).to.be.near(out.Size.X)
+					-- expect(v.Size.Y).to.be.equal(out.Size.Y)
+					-- expect(v.Size.Z).to.be.equal(out.Size.Z)
+					-- expect(v.CFrame.X).to.be.equal(out.CFrame.X)
+					-- expect(v.CFrame.Y).to.be.equal(out.CFrame.Y)
+					-- expect(v.CFrame.Z).to.be.equal(out.CFrame.Z)
+					-- expect(v.CFrame.Rotation.X).to.be.equal(out.CFrame.Rotation.X)
+					-- expect(v.CFrame.Rotation.Y).to.be.equal(out.CFrame.Rotation.Y)
+					-- expect(v.CFrame.Rotation.Z).to.be.equal(out.CFrame.Rotation.Z)
+					expect(v.Size.X).to.be.near(out.Size.X, 0.002)
+					expect(v.Size.Y).to.be.near(out.Size.Y, 0.002)
+					expect(v.Size.Z).to.be.near(out.Size.Z, 0.002)
+					expect(v.CFrame.X).to.be.near(out.CFrame.X, 0.002)
+					expect(v.CFrame.Y).to.be.near(out.CFrame.Y, 0.002)
+					expect(v.CFrame.Z).to.be.near(out.CFrame.Z, 0.002)
+					expect(v.CFrame.Rotation.X).to.be.near(out.CFrame.Rotation.X, 0.002)
+					expect(v.CFrame.Rotation.Y).to.be.near(out.CFrame.Rotation.Y, 0.002)
+					expect(v.CFrame.Rotation.Z).to.be.near(out.CFrame.Rotation.Z, 0.002)
+				end
+			end)
+			it("Region3int16", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local min = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local max = rng:NextUnitVector() * rng:NextInteger(-10000, 10000)
+					local v = Region3int16.new(
+						Vector3int16.new(min.X, min.Y, min.Z),
+						Vector3int16.new(max.X, max.Y, max.Z)
+					)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.Min.X).to.be.equal(out.Min.X)
+					expect(v.Min.Y).to.be.equal(out.Min.Y)
+					expect(v.Min.Z).to.be.equal(out.Min.Z)
+					expect(v.Max.X).to.be.equal(out.Max.X)
+					expect(v.Max.Y).to.be.equal(out.Max.Y)
+					expect(v.Max.Z).to.be.equal(out.Max.Z)
+				end
+			end)
+			it("TweenInfo", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v = TweenInfo.new(
+						rng:NextNumber(),
+						Enum.EasingStyle.Bounce,
+						Enum.EasingDirection.InOut,
+						rng:NextInteger(1, 4),
+						rng:NextNumber() < 0.5,
+						rng:NextNumber() * 10
+					)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.DelayTime).to.be.equal(out.DelayTime)
+					expect(v.EasingDirection).to.be.equal(out.EasingDirection)
+					expect(v.EasingStyle).to.be.equal(out.EasingStyle)
+					expect(v.RepeatCount).to.be.equal(out.RepeatCount)
+					expect(v.Reverses).to.be.equal(out.Reverses)
+					expect(v.Time).to.be.equal(out.Time)
+				end
+			end)
+			it("UDim", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v = UDim.new(rng:NextNumber(), rng:NextInteger(10, 300))
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.Scale).to.be.equal(out.Scale)
+					expect(v.Offset).to.be.equal(out.Offset)
+				end
+			end)
+			it("UDim2", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v = UDim2.new(rng:NextNumber(), rng:NextInteger(10, 300), rng:NextNumber(), rng:NextInteger(10, 300))
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v.X.Scale).to.be.equal(out.X.Scale)
+					expect(v.X.Offset).to.be.equal(out.X.Offset)
+					expect(v.Y.Scale).to.be.equal(out.Y.Scale)
+					expect(v.Y.Offset).to.be.equal(out.Y.Offset)
+				end
+			end)
+			it("number", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v = rng:NextNumber() * rng:NextInteger(-10000, 10000)
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v).to.be.equal(out)
+				end
+			end)
+			it("string", function()
+				local rng = Random.new(SEED)
+				for i=1, SAMPLE_SIZE do
+					local v = ""
+					for m=1, rng:NextInteger(1, 45) do
+						v ..= string.char(rng:NextInteger(48, 90))
+					end
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v).to.be.equal(out)
+				end
+			end)
+			it("string", function()
+				for i=0, 1 do
+					local v = i == 1
+					local encoded = SerializeUtil.encodeType(v)
+					local out = SerializeUtil.decodeType(encoded)
+					expect(v).to.be.equal(out)
 				end
 			end)
 		end)
