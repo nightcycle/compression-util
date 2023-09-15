@@ -14,7 +14,7 @@ local TableUtil = require(_Packages:WaitForChild("TableUtil"))
 -- Class
 local Util = {}
 
-function Util.encodeDictionary<K,V>(
+function Util.encode<K,V>(
 	dict: {[K]: V}, 
 	keyArrayEncoder: (array: {[number]: K}) -> string, 
 	valueArrayEncoder: (array: {[number]: V}) -> string
@@ -32,7 +32,7 @@ function Util.encodeDictionary<K,V>(
 	return string.pack("ss", encodedKeys, encodedValues)	
 end
 
-function Util.decodeDictionary<K,V>(
+function Util.decode<K,V>(
 	encodedDictionary: string, 
 	keyArrayDecoder: (encodedArray: string) -> {[number]: K}, 
 	valueArrayDecoder: (encodedArray: string) -> {[number]: V}
