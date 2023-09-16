@@ -29,19 +29,20 @@ function Util.toBaseN(value: number, base: number, characters: {[number]: string
 	reduce(value)
 	return out
 end
-
-function Util.toBase10(value: string, base: number, characters: {[number]: string}): number
+function Util.toBase10(value: string, base: number, characters: { [number]: string }): number
 	assert(#characters == base, `base {base} doesn't match number of characters ({#characters})`)
 	local out = 0
 	local function expand(current: string)
-		local exp = value:len()-1
-		local weight = table.find(characters, current:sub(1,1))
-		assert(weight)
+		local exp = current:len() - 1
+		local weight = table.find(characters, current:sub(1, 1))
+		-- warn(`cur {current} exp {exp} weight {weight}`)
+		assert(weight, `couldn't find character {current:sub(1, 1)} of len {value:len()} in string {current} in character array`)
 		out += weight * (base ^ exp)
 		if exp > 0 then
-			expand(current:sub(2, current:len()))
+			expand(current:sub(2))
 		end
 	end
+	-- warn(`expanding {value}`)
 	expand(value)
 	return out
 end
