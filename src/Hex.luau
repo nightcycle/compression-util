@@ -7,7 +7,7 @@ local _Packages = _Package.Parent
 local BaseN = require(_Package:WaitForChild("BaseN"))
 -- Types
 -- Constants
-local HEX_CHARACTERS = {"0", "1", "2", "3", "4", "5", "6", "8", "9", "A", "B", "C", "D", "E", "F"}
+local HEX_CHARACTERS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
 
 -- Variables
 -- References
