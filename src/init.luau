@@ -19,6 +19,7 @@ local Util = {
 		Base64 = require(_Package:WaitForChild("Encoding"):WaitForChild("Base64")),
 		Bit = require(_Package:WaitForChild("Encoding"):WaitForChild("Bit")),
 		Byte = require(_Package:WaitForChild("Encoding"):WaitForChild("Byte")),
+		UTF8 = require(_Package:WaitForChild("Encoding"):WaitForChild("UTF8")),
 	},
 	Array = require(_Package:WaitForChild("Array")),
 	Dictionary = require(_Package:WaitForChild("Dictionary")),
