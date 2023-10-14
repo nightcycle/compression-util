@@ -5,15 +5,141 @@ local _Packages = _Package.Parent
 local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- Packages
-local TableUtil = require(_Packages:WaitForChild("TableUtil"))
 -- Modules
 -- Types
+type BaseConversionData = {
+	Base10: number,
+	Hex: string,
+	Base2: string,
+}
 -- Constants
 local SEED = tick()
 local BIG = 10000000000
 local SHORT_MAX = 65535
 local ARRAY_LENGTH = 10--00
 local SAMPLE_SIZE = 10--00
+local BASE_TESTS: {[number]: BaseConversionData} = {
+	{
+		Base10 = 0,
+		Hex = "0",
+		Base2 = "0",
+	},
+	{
+		Base10 = 1,
+		Hex = "1",
+		Base2 = "1",
+	},
+	{
+		Base10 = 2,
+		Hex = "2",
+		Base2 = "10",
+	},
+	{
+		Base10 = 3,
+		Hex = "3",
+		Base2 = "11",
+	},
+	{
+		Base10 = 4,
+		Hex = "4",
+		Base2 = "100",
+	},
+	{
+		Base10 = 5,
+		Hex = "5",
+		Base2 = "101",
+	},
+	{
+		Base10 = 6,
+		Hex = "6",
+		Base2 = "110",
+	},
+	{
+		Base10 = 7,
+		Hex = "7",
+		Base2 = "111",
+	},
+	{
+		Base10 = 8,
+		Hex = "8",
+		Base2 = "1000",
+	},
+	{
+		Base10 = 9,
+		Hex = "9",
+		Base2 = "1001",
+	},
+	{
+		Base10 = 10,
+		Hex = "A",
+		Base2 = "1010",
+	},
+	{
+		Base10 = 11,
+		Hex = "B",
+		Base2 = "1011",
+	},
+	{
+		Base10 = 12,
+		Hex = "C",
+		Base2 = "1100",
+	},
+	{
+		Base10 = 13,
+		Hex = "D",
+		Base2 = "1101",
+	},
+	{
+		Base10 = 14,
+		Hex = "E",
+		Base2 = "1110",
+	},
+	{
+		Base10 = 15,
+		Hex = "F",
+		Base2 = "1111",
+	},
+	{
+		Base10 = 16,
+		Hex = "10",
+		Base2 = "10000",
+	},
+	{
+		Base10 = 17,
+		Hex = "11",
+		Base2 = "10001",
+	},
+	{
+		Base10 = 64,
+		Hex = "40",
+		Base2 = "1000000",
+	},
+	{
+		Base10 = 128,
+		Hex = "80",
+		Base2 = "10000000",
+	},
+	{
+		Base10 = 255,
+		Hex = "FF",
+		Base2 = "11111111",
+	},
+	{
+		Base10 = 256,
+		Hex = "100",
+		Base2 = "100000000",
+	},
+	{
+		Base10 = 65025,
+		Hex = "FE01",
+		Base2 = "1111111000000001",
+	},
+	{
+		Base10 = 65536,
+		Hex = "10000",
+		Base2 = "10000000000000000",
+	},
+}
 -- Variables
 -- References
 
@@ -25,6 +151,23 @@ return function()
 		end
 
 		local SerializeUtil = require(script.Parent)
+
+		describe("base-n", function()
+			describe("base-2", function()
+				it("in", function()
+					for i, data in ipairs(BASE_TESTS) do
+						local v = SerializeUtil.Encoding.BaseN.toBaseN(data.Base10, 2, "01")
+						expect(v).to.be.equal(data.Base2)
+					end
+				end)
+				it("out", function()
+					for i, data in ipairs(BASE_TESTS) do
+						local v = SerializeUtil.Encoding.BaseN.fromBaseN(data.Base2, 2, "01")
+						expect(v).to.be.equal(data.Base10)
+					end
+				end)
+			end)
+		end)
 
 		describe("encode-array", function()
 		
